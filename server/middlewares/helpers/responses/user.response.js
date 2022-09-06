@@ -45,10 +45,10 @@ const UserResponse = {
 		}
 	},
 	
-	getUserError(message) {
+	getUserError() {
 		return {
 			status: errorCodes.Error400.code, type: errorCodes.Error400.type,
-			message: message
+			message: 'Error retrieving/Create user at this time'
 		}
 	}
  

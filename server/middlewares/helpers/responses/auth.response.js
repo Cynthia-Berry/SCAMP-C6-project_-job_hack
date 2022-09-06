@@ -1,6 +1,6 @@
-const errorCodes = require("../../enums/errorCodes.enum");
-const successCodes = require("../../enums/successCodes.enum");
-const tokenResponse = require("../../enums/token.enum");
+const errorCodes = require("../enums/errorCodes.enum");
+const successCodes = require("../enums/successCodes.enum");
+const tokenResponse = require("../enums/token.enum");
 
 
 const AuthResponse = {
