@@ -3,10 +3,10 @@ const errorCodes = require("../enums/errorCodes.enum");
 
 
 const UserResponse = {
-	getUserResponse() {
+	getUserResponse(data) {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
-			message: `User fetched Successfully`
+			message: `User profile fetched Successfully`, data: data
 		};
 	},
 	

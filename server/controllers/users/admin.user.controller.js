@@ -8,6 +8,7 @@ const AdminTokenModel = require('../../models/tokens/admin.token');
 const UserResponse = require('../../middlewares/helpers/responses/user.response');
 const AuthResponse = require('../../middlewares/helpers/responses/auth.response');
 const config = require('../../middlewares/helpers/enums/config.enum');
+const {databaseError} = require("../../middlewares/helpers/responses/database.response");
 
 
 const AdminUserController = {
@@ -58,8 +59,7 @@ const AdminUserController = {
 					});
 				});
 		}).catch((error) => {
-			console.log(error);
-			const response = UserResponse.getUserError();
+			const response = databaseError(error);
 			logger.error(response.message);
 			res.status(response.status).json({status: response.type, message: response.message});
 		})
@@ -68,8 +68,9 @@ const AdminUserController = {
 	updateAdmin(req, res) {
 	},
 	
-	deleteAdmin(req, res) {
-	}
+	deleteAdmin: (req, res) => {
+    UserController.deleteUser(req, res, config.ADMIN);
+  }
 	
 }
 
