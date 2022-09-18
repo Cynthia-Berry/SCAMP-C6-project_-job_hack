@@ -1,26 +1,17 @@
-const crypto = require('crypto');
 const randomstring = require("randomstring");
 
 const CharacterGenerator = {
-	generateUUID() {
-		crypto.randomUUID()
-	},
-	
-	accountNumberGenerator() {
-		return randomstring.generate({charset: 'numeric', length: 10});
-	},
-	
-	transactionRefGenerator(organization) {
-		let difference, organizationString;
-		if (organization.length < 4) {
-			difference = 4 - organization.length;
+	userIdGenerator(name) {
+		let difference, nameString;
+		if (name.length < 4) {
+			difference = 4 - name.length;
 			const patch = randomstring.generate({charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', length: parseInt(difference)});
-			organizationString = `${organization}${patch}`
+			nameString = `${name}${patch}`
 		} else {
-			organizationString = organization.substring(0, 3);
+			nameString = name.substring(0, 3);
 		}
-		const generatedSuffix = randomstring.generate({charset: 'alphanumeric', length: 9});
-		return `${organizationString.toUpperCase()}${generatedSuffix}`;
+		const generatedSuffix = randomstring.generate({charset: 'numeric', length: 5});
+		return `${nameString.toUpperCase()}${generatedSuffix}`;
 	}
 }
 

@@ -8,6 +8,36 @@ const {databaseError} = require("../../middlewares/helpers/responses/database.re
 
 let UserModel;
 const UserController = {
+	
+	getAllUsers: (req, res, userType) => {
+		UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
+		const paginate = PaginationService.validatePageNo(req);
+		const filterQuery = PaginationService.filterPaginateQuery(req);
+		UserModel.countDocuments(filterQuery, (err, totalCount) => {
+			if (err || totalCount < 0) {
+				const response = getUserError(err, userType);
+				res.status(response.status).json({status: response.type, message: response.message});
+			} else {
+				const exceptions = "-applications -documents -password -categories -portfolio -skills";
+				UserModel.find(filterQuery, exceptions, paginate.query, (err, users) => {
+					if (err) {
+						const response = databaseError(err);
+						res.status(response.status).json({status: response.type, message: response.message});
+					} else {
+						console.log(user)
+						const pages = Math.ceil(totalCount / paginate.pageSize);
+						const response = getAllUsersSuccess();
+						res.status(response.status).json({
+							status: response.type, message: response.message, count: totalCount, pageNo: paginate.pageNo,
+							pages: pages, data: users
+						});
+					}
+				})
+			}
+		});
+		
+	},
+	
 	getUserById: (req, res, type) => {
 		const id = req.params.id;
 		const userType = type === config.PROFILE ? res.locals.tokenOwner.role : type;
@@ -17,11 +47,11 @@ const UserController = {
 			console.log('data', data)
 			console.log('err', err)
 			if (err) {
-        const response = databaseError(err);
-        res.status(response.status).json({status: response.type, message: response.message});
-      }else{
+				const response = databaseError(err);
+				res.status(response.status).json({status: response.type, message: response.message});
+			} else {
 				const response = UserResponse.getUserResponse(data);
-          res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
 			}
 		});
 	},

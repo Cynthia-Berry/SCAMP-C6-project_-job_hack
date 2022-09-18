@@ -3,29 +3,27 @@ const moment = require('moment');
 const jwt = require("jsonwebtoken");
 const UserController = require('./user.controller');
 const logger = require('../../middlewares/utils/logger');
-const AdminUserModel = require('../../models/users/admin.user');
+const ClientUserModel = require('../../models/users/client.user');
 const AuthTokenModel = require('../../models/tokens/auth.token.js');
 const config = require('../../middlewares/helpers/enums/config.enum');
-const CharacterGenerator = require("../../middlewares/utils/char.generator");
 const AuthResponse = require('../../middlewares/helpers/responses/auth.response');
 const UserResponse = require('../../middlewares/helpers/responses/user.response');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
 
-const AdminUserController = {
-	getAllAdmins(req, res) {
-		UserController.getAllUsers(req, res, config.ADMIN);
+const ClientUserController = {
+	getAllClients(req, res) {
+		UserController.getAllUsers(req, res, config.CLIENT);
 	},
 	
-	getAdminById: (req, res) => {
-		UserController.getUserById(req, res, config.ADMIN);
+	getClientById: (req, res) => {
+		UserController.getUserById(req, res, config.CLIENT);
 	},
 	
-	createAdmin: async (req, res) => {
+	createClient: async (req, res) => {
 		const {firstName, lastName, email, phoneNumber, password} = req.body;
 		const encryptedUserPassword = await bcrypt.hash(password, config.BCRYPT_SALT_RATE);
 		
-		const userObject = await new AdminUserModel({
-			adminId: CharacterGenerator.userIdGenerator(firstName),
+		const clientObject = await new ClientUserModel({
 			firstName: firstName,
 			lastName: lastName,
 			email: email.toLowerCase(),
@@ -33,29 +31,28 @@ const AdminUserController = {
 			password: encryptedUserPassword,
 		});
 		
-		userObject.save().then(async () => {
-			jwt.sign({userId: userObject.id}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+		clientObject.save().then(async () => {
+			jwt.sign({userId: clientObject.id}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
 				} else {
 					const hours = moment().add(6, "hours");
-					const update = {$set: {token: result, expireDate: hours, userId: userObject.id}};
+					const update = {$set: {token: result, expireDate: hours, userId: clientObject.id}};
 					const options = {upsert: true, new: true, setDefaultsOnInsert: true};
-					AuthTokenModel.findByIdAndUpdate(userObject.id, update, options, () => {
+					AuthTokenModel.findByIdAndUpdate(clientObject.id, update, options, () => {
 						const response = UserResponse.createUserResponse();
 						logger.info(response.message);
 						res.status(response.status).json({
 							status: response.type, message: response.message,
 							data: {
-								id: userObject.id,
-								adminId: userObject.adminId,
-								firstName: userObject.firstName,
-								lastName: userObject.lastName,
-								email: userObject.email,
-								phoneNumber: userObject.phoneNumber,
-								updatedAt: userObject.updatedAt,
-								createdAt: userObject.createdAt,
+								id: clientObject.id,
+								firstName: clientObject.firstName,
+								lastName: clientObject.lastName,
+								email: clientObject.email,
+								phoneNumber: clientObject.phoneNumber,
+								updatedAt: clientObject.updatedAt,
+								createdAt: clientObject.createdAt,
 							}
 						});
 					})
@@ -68,14 +65,14 @@ const AdminUserController = {
 		})
 	},
 	
-	updateAdmin(req, res) {
+	updateClient(req, res) {
 	},
 	
-	deleteAdmin: (req, res) => {
-		UserController.deleteUser(req, res, config.ADMIN);
+	deleteClient: (req, res) => {
+		UserController.deleteUser(req, res, config.CLIENT);
 	}
 	
 }
 
-module.exports = AdminUserController;
+module.exports = ClientUserController;
 

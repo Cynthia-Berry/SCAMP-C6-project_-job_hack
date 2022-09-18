@@ -17,7 +17,7 @@ const config = {
   FILE_IMAGE: 'IMAGE',
   FILE_DOCUMENT: 'DOCUMENT',
   BCRYPT_SALT_RATE: 10,
-  JWT_EXPIRE_PERIOD: '2d',
+  JWT_EXPIRE_PERIOD: '6h',
   COUNTER: {
     PENDING: "pending",
     SHORTLIST: "shortlisted",

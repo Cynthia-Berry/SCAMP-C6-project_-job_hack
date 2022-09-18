@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const adminAuthController = require('../../controllers/auths/admin.auth.controller');
+const AdminAuthController = require('../../controllers/auths/admin.auth.controller');
 const validator = require("../../middlewares/services/validator.service");
 
 
-router.post('/register', validator("authValidators", "createAdmin"), adminAuthController.signUp);
-router.post('/login', validator("authValidators", "login"), adminAuthController.signIn);
+router.post('/login', validator("authValidators", "adminLogin"), AdminAuthController.signIn);
+router.post('/register', validator("authValidators", "createUser"), AdminAuthController.signUp);
 
 module.exports = router;
