@@ -4,7 +4,7 @@ const CompanyAuthController = require('../../controllers/auths/company.auth.cont
 const validator = require("../../middlewares/services/validator.service");
 
 
-router.post('/login', validator("authValidators", "userLogin"), CompanyAuthController.signIn);
-router.post('/register', validator("authValidators", "createUser"), CompanyAuthController.signUp);
+router.post('/login', validator("authValidators", "companyLogin"), CompanyAuthController.signIn);
+router.post('/register', validator("authValidators", "createCompany"), CompanyAuthController.signUp);
 
 module.exports = router;

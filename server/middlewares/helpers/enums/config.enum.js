@@ -2,7 +2,6 @@ const config = {
   ADMIN: 'ADMIN',
 	CLIENT: 'CLIENT',
 	COMPANY: 'COMPANY',
-	COMPANY_ADMIN: 'COMPANY_ADMIN',
   SKILL: 'Skill',
   EDUCATION: 'Education',
   JOB: 'Job',

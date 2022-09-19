@@ -16,6 +16,8 @@ require('./server/config/database');
 const indexRouter = require('./server/routes/index');
 const adminAuthRouter = require('./server/routes/auths/admin.auth.route');
 const clientAuthRouter = require('./server/routes/auths/client.auth.route');
+const companyAuthRouter = require('./server/routes/auths/company.auth.route');
+const adminProfileRouter = require('./server/routes/users/admin.user.route');
 
 
 // set headers (handling cors error)
@@ -36,7 +38,8 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 app.use('/', indexRouter);
 app.use('/admin', adminAuthRouter);
 app.use('/client', clientAuthRouter);
-
+app.use('/company', companyAuthRouter);
+app.use('/admin-profile', adminProfileRouter);
 
 
 app.listen(port, () =>
