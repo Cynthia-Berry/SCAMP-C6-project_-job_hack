@@ -16,11 +16,18 @@ const UserResponse = {
 			message: `User Created Successfully`
 		};
 	},
- 
-	updateUserResponse() {
+	
+	updateUserForbidden: type => {
+		return {
+			status: errorCodes.Error401.code, type: errorCodes.Error401.type,
+			message: `Error occurred, could not update the ${type.toLowerCase()} information`
+		};
+	},
+	
+	updateUserSuccess: (data, type) => {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
-			message: `User resources and information updated successfully`
+			message: `${type} information successfully updated`, data: data
 		};
 	},
 	
@@ -45,13 +52,13 @@ const UserResponse = {
 		}
 	},
 	
-	getUserError() {
+	getUserError: (error, type) => {
 		return {
 			status: errorCodes.Error400.code, type: errorCodes.Error400.type,
-			message: 'Error retrieving/Create user at this time'
-		}
+			message: `Error occurred, could not fetch ${type.toLowerCase()} resources`
+		};
 	}
- 
+	
 }
 
 module.exports = UserResponse;

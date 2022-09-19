@@ -17,7 +17,7 @@ const AdminUserController = {
 	},
 	
 	getAdminById: (req, res) => {
-		UserController.getUserById(req, res, config.ADMIN);
+		UserController.getUserById(req, res);
 	},
 	
 	createAdmin: async (req, res) => {
@@ -25,7 +25,7 @@ const AdminUserController = {
 		const encryptedUserPassword = await bcrypt.hash(password, config.BCRYPT_SALT_RATE);
 		
 		const userObject = await new AdminUserModel({
-			adminId: CharacterGenerator.userIdGenerator(firstName),
+			adminId: CharacterGenerator.userIdGenerator(firstName.replace(/\s+/g, '')),
 			firstName: firstName,
 			lastName: lastName,
 			email: email.toLowerCase(),
@@ -34,7 +34,7 @@ const AdminUserController = {
 		});
 		
 		userObject.save().then(async () => {
-			jwt.sign({userId: userObject.id}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+			jwt.sign({userId: userObject.id, role: userObject.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
@@ -68,7 +68,8 @@ const AdminUserController = {
 		})
 	},
 	
-	updateAdmin(req, res) {
+	updateAdmin: (req, res) => {
+		UserController.updateUser(req, res);
 	},
 	
 	deleteAdmin: (req, res) => {

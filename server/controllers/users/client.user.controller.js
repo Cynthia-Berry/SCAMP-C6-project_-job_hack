@@ -12,11 +12,11 @@ const {databaseError} = require("../../middlewares/helpers/responses/database.re
 
 const ClientUserController = {
 	getAllClients(req, res) {
-		UserController.getAllUsers(req, res, config.CLIENT);
+		UserController.getAllUsers(req, res);
 	},
 	
 	getClientById: (req, res) => {
-		UserController.getUserById(req, res, config.CLIENT);
+		UserController.getUserById(req, res);
 	},
 	
 	createClient: async (req, res) => {
@@ -32,7 +32,7 @@ const ClientUserController = {
 		});
 		
 		clientObject.save().then(async () => {
-			jwt.sign({userId: clientObject.id}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+			jwt.sign({userId: clientObject.id,  role: clientObject.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
@@ -69,7 +69,7 @@ const ClientUserController = {
 	},
 	
 	deleteClient: (req, res) => {
-		UserController.deleteUser(req, res, config.CLIENT);
+		UserController.deleteUser(req, res);
 	}
 	
 }
