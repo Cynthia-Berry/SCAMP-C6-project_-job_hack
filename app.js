@@ -15,6 +15,7 @@ require('./server/middlewares/utils/logger');
 require('./server/config/database');
 const indexRouter = require('./server/routes/index');
 const adminAuthRouter = require('./server/routes/auths/admin.auth.route');
+const clientAuthRouter = require('./server/routes/auths/client.auth.route');
 
 
 // set headers (handling cors error)
@@ -29,12 +30,12 @@ app.use((req, res, next) => {
 
 // set the req body (parses the body that comes with post/put requests )
 app.use(express.json({limit: '50mb', extended: true}));
-app.use(express.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static(path.join(__dirname, 'server/public')));
-app.use(express.json({limit: '50mb', extended: true}));
 app.use(express.urlencoded({limit: '50mb', extended: true}));
+
 app.use('/', indexRouter);
 app.use('/admin', adminAuthRouter);
+app.use('/client', clientAuthRouter);
 
 
 

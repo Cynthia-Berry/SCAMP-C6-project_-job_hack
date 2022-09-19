@@ -1,5 +1,5 @@
 //SOURCE: https://stackabuse.com/authentication-and-authorization-with-jwts-in-express-js/
-const TokenModel = require('../../../models/tokens/admin.token');
+const AuthTokenModel = require('../../../models/tokens/auth.token.js');
 const TokenService = require('../../services/auth.service');
 const TokenResponse = require('../../helpers/responses/auth.response');
 
@@ -9,7 +9,7 @@ const TokenValidator = {
   validateAuth: (req, res, next) => {
     if (req.headers && req.headers['authorization']) {
       TokenService.verifyJWT(req, res, req.headers['authorization'], async data => {
-        TokenModel.findById(data.userId).then(user => {
+        AuthTokenModel.findById(data.userId).then(user => {
           if (user.id === data.user_id) {
             res.locals.userData = user;
             res.locals.tokenOwner = data;
