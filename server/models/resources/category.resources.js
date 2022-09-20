@@ -7,12 +7,10 @@ const CategoriesResourcesSchema = new Schema({
 		type: String,
 		required: true,
 		unique: true,
+		uniqueCaseInsensitive: true,
+		trim: true,
 	},
-	specialization: {
-		type: String,
-		required: true,
-		unique: true,
-	}
+	category: [String]
 }, {
 	timestamps: true
 });

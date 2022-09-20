@@ -1,30 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../../controllers/users/admin.user.controller');
+const skillsController = require('../../controllers/resources/skill.controller');
 const tokenValidators = require("../../middlewares/helpers/validators/token.validator");
 const validator = require("../../middlewares/services/validator.service");
 
 
+router.post('/',
+	validator("resourceValidators", "category"),
+	tokenValidators.validateAuth,
+	tokenValidators.adminOrCompanyValidators,
+	skillsController.creatSkills
+);
 router.get('/',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.getAllAdmins
+	skillsController.getAllSkills
 );
 router.get('/:id',
 	tokenValidators.validateAuth,
-	tokenValidators.adminValidators,
-	adminController.getAdminById
+	skillsController.getSkills
 );
 router.put('/:id',
-	validator("userValidators", "editAdmin"),
+	validator("resourceValidators", "category"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.updateAdmin
+	skillsController.updateSkills
 );
 router.delete('/:id',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.deleteAdmin
+	skillsController.deleteSkills
 );
 
 module.exports = router;

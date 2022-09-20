@@ -14,12 +14,17 @@ const port = process.env.PORT || 5000;
 require('./server/middlewares/utils/logger');
 require('./server/config/database');
 const indexRouter = require('./server/routes/index');
+const authRouter = require('./server/routes/auths/auth.route');
 const adminAuthRouter = require('./server/routes/auths/admin.auth.route');
 const clientAuthRouter = require('./server/routes/auths/client.auth.route');
 const companyAuthRouter = require('./server/routes/auths/company.auth.route');
 const adminProfileRouter = require('./server/routes/users/admin.user.route');
 const clientProfileRouter = require('./server/routes/users/client.user.route');
 const companyProfileRouter = require('./server/routes/company/company.route');
+const categoryRouter = require('./server/routes/resources/category.route');
+const educationRouter = require('./server/routes/resources/education.route');
+const documentRouter = require('./server/routes/resources/document.route');
+const skillRouter = require('./server/routes/resources/skill.route');
 
 
 // set headers (handling cors error)
@@ -38,12 +43,17 @@ app.use(express.static(path.join(__dirname, 'server/public')));
 app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/', indexRouter);
+app.use('/auth', authRouter);
 app.use('/admin', adminAuthRouter);
 app.use('/client', clientAuthRouter);
 app.use('/company', companyAuthRouter);
 app.use('/admin-profile', adminProfileRouter);
 app.use('/client-profile', clientProfileRouter);
 app.use('/company-profile', companyProfileRouter);
+app.use('/category', categoryRouter);
+app.use('/education', educationRouter);
+app.use('/document', documentRouter);
+app.use('/skill', skillRouter);
 
 
 app.listen(port, () =>

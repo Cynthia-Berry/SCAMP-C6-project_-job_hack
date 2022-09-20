@@ -1,30 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../../controllers/users/admin.user.controller');
+const categoryController = require('../../controllers/resources/category.controller');
 const tokenValidators = require("../../middlewares/helpers/validators/token.validator");
 const validator = require("../../middlewares/services/validator.service");
 
 
+router.post('/',
+	validator("resourceValidators", "category"),
+	tokenValidators.validateAuth,
+	tokenValidators.adminOrCompanyValidators,
+	categoryController.creatCategory
+);
 router.get('/',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.getAllAdmins
+	categoryController.getAllCategories
 );
 router.get('/:id',
 	tokenValidators.validateAuth,
-	tokenValidators.adminValidators,
-	adminController.getAdminById
+	categoryController.getCategory
 );
 router.put('/:id',
-	validator("userValidators", "editAdmin"),
+	validator("resourceValidators", "category"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.updateAdmin
+	categoryController.updateCategory
 );
 router.delete('/:id',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.deleteAdmin
+	categoryController.deleteCategory
 );
 
 module.exports = router;

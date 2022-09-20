@@ -1,10 +1,30 @@
-const ClientModel = require("../../models/users/client.user");
 const logger = require("../../middlewares/utils/logger");
+const ClientModel = require("../../models/users/client.user");
 const config = require("../../middlewares/helpers/enums/config.enum");
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
-
+const ResourceController = require("./resource.controller");
 
 const CategoryController = {
+	creatCategory: (req, res) => {
+		ResourceController.creatResource(req, res, config.CATEGORY)
+	},
+	
+	getAllCategories: (req, res) => {
+		ResourceController.getAllResource(req, res, config.CATEGORY)
+	},
+	
+	getCategory: (req, res) => {
+		ResourceController.getResource(req, res, config.CATEGORY)
+	},
+	
+	updateCategory: (req, res) => {
+		ResourceController.updateResource(req, res, config.CATEGORY)
+	},
+	
+	deleteCategory: (req, res) => {
+		ResourceController.deleteResource(req, res, config.CATEGORY)
+	},
+	
 	updateUserCategory: (id, newCategories) => {
 		ClientModel.findOneAndUpdate({_id: id}, {$push: {categories: newCategories}}, {new: true}, async (err, data) => {
 			if (err) {
