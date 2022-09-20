@@ -71,6 +71,10 @@ const clientUserSchema = new Schema({
 		type: mongoose.Types.ObjectId,
 		ref: 'DocumentsResources'
 	}],
+	educations: [{
+		type: mongoose.Types.ObjectId,
+		ref: 'EducationResources'
+	}],
 	skills: [{
 		type: mongoose.Types.ObjectId,
 		ref: 'SkillsResources'

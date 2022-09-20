@@ -9,6 +9,7 @@ const config = require('../../middlewares/helpers/enums/config.enum');
 const AuthResponse = require('../../middlewares/helpers/responses/auth.response');
 const UserResponse = require('../../middlewares/helpers/responses/user.response');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
+const ClientModel = require("../../models/users/client.user");
 
 const ClientUserController = {
 	getAllClients(req, res) {
@@ -72,7 +73,19 @@ const ClientUserController = {
 	
 	deleteClient: (req, res) => {
 		UserController.deleteUser(req, res, config.CLIENT);
-	}
+	},
+	
+	updateUserPortfolio: (id, newPortfolio) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$push: {portfolio: newPortfolio}}, {new: true}, async (err, data) => {
+			if (err) {
+				const response = databaseError(err);
+				logger.error(response);
+			} else {
+				const response = updateUserSuccess(data, config.CLIENT);
+				logger.info(response);
+			}
+		});
+	},
 	
 }
 
