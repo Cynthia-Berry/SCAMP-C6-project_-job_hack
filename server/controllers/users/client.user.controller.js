@@ -12,11 +12,11 @@ const {databaseError} = require("../../middlewares/helpers/responses/database.re
 
 const ClientUserController = {
 	getAllClients(req, res) {
-		UserController.getAllUsers(req, res, config.CLIENT);
+		UserController.getAllUsers(req, res);
 	},
 	
 	getClientById: (req, res) => {
-		UserController.getUserById(req, res, config.CLIENT);
+		UserController.getUserById(req, res);
 	},
 	
 	createClient: async (req, res) => {
@@ -71,7 +71,7 @@ const ClientUserController = {
 	},
 	
 	deleteClient: (req, res) => {
-		UserController.deleteUser(req, res, config.CLIENT);
+		UserController.deleteUser(req, res);
 	}
 	
 }
