@@ -34,7 +34,10 @@ const AdminUserController = {
 		});
 		
 		userObject.save().then(async () => {
-			jwt.sign({userId: userObject.id, role: userObject.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+			jwt.sign({
+				userId: userObject.id,
+				role: userObject.role
+			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
@@ -43,20 +46,20 @@ const AdminUserController = {
 					const update = {$set: {token: result, expireDate: hours, userId: userObject.id}};
 					const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 					AuthTokenModel.findByIdAndUpdate(userObject.id, update, options, () => {
-						const response = UserResponse.createUserResponse();
+						const data = {
+							id: userObject.id,
+							adminId: userObject.adminId,
+							firstName: userObject.firstName,
+							lastName: userObject.lastName,
+							email: userObject.email,
+							phoneNumber: userObject.phoneNumber,
+							updatedAt: userObject.updatedAt,
+							createdAt: userObject.createdAt,
+						}
+						const response = UserResponse.createUserResponse(config.ADMIN, data);
 						logger.info(response.message);
 						res.status(response.status).json({
-							status: response.type, message: response.message,
-							data: {
-								id: userObject.id,
-								adminId: userObject.adminId,
-								firstName: userObject.firstName,
-								lastName: userObject.lastName,
-								email: userObject.email,
-								phoneNumber: userObject.phoneNumber,
-								updatedAt: userObject.updatedAt,
-								createdAt: userObject.createdAt,
-							}
+							status: response.type, message: response.message, data: response.data
 						});
 					})
 				}
@@ -69,7 +72,7 @@ const AdminUserController = {
 	},
 	
 	updateAdmin: (req, res) => {
-		UserController.updateUser(req, res);
+		UserController.updateUser(req, res, config.ADMIN);
 	},
 	
 	deleteAdmin: (req, res) => {

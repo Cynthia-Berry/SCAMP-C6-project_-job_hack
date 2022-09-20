@@ -3,17 +3,17 @@ const errorCodes = require("../enums/errorCodes.enum");
 
 
 const UserResponse = {
-	getUserResponse(data) {
+	getUserResponse (userType, data) {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
-			message: `User profile fetched Successfully`, data: data
+			message: `${userType} profile fetched Successfully`, data: data
 		};
 	},
 	
-	createUserResponse() {
+	createUserResponse(userType, data) {
 		return {
 			status: successCodes.Success201.code, type: successCodes.Success201.type,
-			message: `User Created Successfully`
+			message: `${userType} Created Successfully`, data: data
 		};
 	},
 	
@@ -31,24 +31,24 @@ const UserResponse = {
 		};
 	},
 	
-	deleteUserResponse() {
+	deleteUserSuccess: type => {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
-			message: `User resources and information deleted successfully`
+			message: `${type} deleted successfully`
 		};
 	},
 	
-	getUserExistError() {
+	getUserExistError(type) {
 		return {
 			status: errorCodes.Error409.code, type: errorCodes.Error409.type,
-			message: `User Already Exist. Please Login!`
+			message: `${type} Already Exist. Please Login!`
 		}
 	},
 	
-	userNotFoundError() {
+	userNotFoundError(type) {
 		return {
 			status: errorCodes.Error400.code, type: errorCodes.Error400.type,
-			message: `No record found, User resource and information does not exist`
+			message: `No record found, ${type} resource and information does not exist`
 		}
 	},
 	

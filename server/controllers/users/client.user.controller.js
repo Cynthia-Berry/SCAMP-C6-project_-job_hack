@@ -32,7 +32,10 @@ const ClientUserController = {
 		});
 		
 		clientObject.save().then(async () => {
-			jwt.sign({userId: clientObject.id,  role: clientObject.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+			jwt.sign({
+				userId: clientObject.id,
+				role: clientObject.role
+			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
@@ -41,20 +44,18 @@ const ClientUserController = {
 					const update = {$set: {token: result, expireDate: hours, userId: clientObject.id}};
 					const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 					AuthTokenModel.findByIdAndUpdate(clientObject.id, update, options, () => {
-						const response = UserResponse.createUserResponse();
+						const data = {
+							id: clientObject.id,
+							firstName: clientObject.firstName,
+							lastName: clientObject.lastName,
+							email: clientObject.email,
+							phoneNumber: clientObject.phoneNumber,
+							updatedAt: clientObject.updatedAt,
+							createdAt: clientObject.createdAt,
+						}
+						const response = UserResponse.createUserResponse(config.CLIENT, data);
 						logger.info(response.message);
-						res.status(response.status).json({
-							status: response.type, message: response.message,
-							data: {
-								id: clientObject.id,
-								firstName: clientObject.firstName,
-								lastName: clientObject.lastName,
-								email: clientObject.email,
-								phoneNumber: clientObject.phoneNumber,
-								updatedAt: clientObject.updatedAt,
-								createdAt: clientObject.createdAt,
-							}
-						});
+						res.status(response.status).json({status: response.type, message: response.message, data: response.data});
 					})
 				}
 			});
@@ -66,6 +67,7 @@ const ClientUserController = {
 	},
 	
 	updateClient(req, res) {
+		UserController.updateUser(req, res, config.CLIENT)
 	},
 	
 	deleteClient: (req, res) => {

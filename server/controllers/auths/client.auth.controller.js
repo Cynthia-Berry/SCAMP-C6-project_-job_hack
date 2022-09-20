@@ -17,7 +17,7 @@ const ClientAuthController = {
 			const {email, password} = req.body;
 			ClientUserModel.findOne({email: email.toLowerCase()}, async (error, dataExists) => {
 				if (error || !dataExists) {//If user is not found or password don't exist
-					const response = UserResponse.userNotFoundError();
+					const response = UserResponse.userNotFoundError(config.CLIENT);
 					logger.error(response.message);
 					res.status(response.status).json({status: response.type, message: response.message});
 				} else {
@@ -63,7 +63,7 @@ const ClientAuthController = {
 	signUp: async (req, res) => {
 		const isUserExist = await ClientUserModel.findOne({email: req.body.email.toLowerCase()});
 		if (isUserExist) {
-			const response = UserResponse.getUserExistError();
+			const response = UserResponse.getUserExistError(config.CLIENT);
 			logger.error(`[FAILED]: ${response.message}`);
 			return res.status(response.status).json({status: response.type, message: response.message});
 		}

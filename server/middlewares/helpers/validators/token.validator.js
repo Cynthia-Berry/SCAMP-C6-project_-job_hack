@@ -15,14 +15,14 @@ const TokenValidator = {
 	},
 	
 	adminOrClientValidators: (req, res, next) => {
-		if (res.locals.tokenOwner['role'] !== config.ADMIN || res.locals.tokenOwner['role'] !== config.CLIENT) {
+		if (res.locals.tokenOwner['role'] === config.COMPANY) {
 			const response = TokenResponse.tokenNotFound();
 			res.status(response.status).json({status: response.type, message: response.message});
 		} else next();
 	},
 	
 	adminOrCompanyValidators: (req, res, next) => {
-		if (res.locals.tokenOwner['role'] !== config.ADMIN || res.locals.tokenOwner['role'] !== config.COMPANY) {
+		if (res.locals.tokenOwner['role'] === config.CLIENT) {
 			const response = TokenResponse.tokenNotFound();
 			res.status(response.status).json({status: response.type, message: response.message});
 		} else next();

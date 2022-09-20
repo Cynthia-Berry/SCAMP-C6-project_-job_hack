@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const CompanyController = require('../../controllers/company/company.controller');
-const validator = require("../../middlewares/services/validator.service");
+const tokenValidators = require("../../middlewares/helpers/validators/token.validator");
 
 
-router.get('/', validator("authValidators", "userLogin"), CompanyController.getAllCompany);
-router.get('/:id', validator("authValidators", "createUser"), CompanyController.getCompanyById);
-router.put('/:id', validator("authValidators", "createUser"), CompanyController.updateCompany);
-router.delete('/:id', validator("authValidators", "createUser"), CompanyController.deleteCompany);
+router.get('/', tokenValidators.validateAuth, tokenValidators.adminValidators, CompanyController.getAllCompany);
+router.get('/:id', tokenValidators.validateAuth, tokenValidators.adminOrCompanyValidators, CompanyController.getCompanyById);
+router.put('/:id', tokenValidators.validateAuth, tokenValidators.adminOrCompanyValidators, CompanyController.updateCompany);
+router.delete('/:id', tokenValidators.validateAuth, tokenValidators.adminOrCompanyValidators, CompanyController.deleteCompany);
 
 module.exports = router;
