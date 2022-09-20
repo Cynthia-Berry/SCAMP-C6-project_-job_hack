@@ -5,6 +5,7 @@ const config = require("../../middlewares/helpers/enums/config.enum");
 const UserResponse = require('../../middlewares/helpers/responses/user.response');
 const PaginationService = require('../../middlewares/services/pagination.service');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
+const ResourceController = require("../resources/resource.controller")
 
 let UserModel;
 
@@ -41,7 +42,7 @@ const UserController = {
 	getUserById: (req, res, userType) => {
 		const id = req.params.id;
 		UserModel = (userType === config.ADMIN) ? AdminModel : userType === config.COMPANY ? CompanyModel : ClientModel;
-		UserModel.findById(id, "-password -documents", async (err, data) => {
+		UserModel.findById(id, "-password", async (err, data) => {
 			if (err) {
 				const response = UserResponse.getUserError(err, userType);
 				res.status(response.status).json({status: response.type, message: response.message});
@@ -53,15 +54,11 @@ const UserController = {
 	},
 	
 	updateUser: async (req, res, userType) => {
-		let newPortfolio = [];
 		const id = req.params.id;
 		UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
-		if ("portfolio" in req.body) {
-			newPortfolio = newPortfolio.concat(req.body.portfolio);
-			delete req.body.portfolio;
-			await UserController.updateUserPortfolio(id, newPortfolio);
+		if(userType === config.CLIENT && ("portfolio" || "documents" || "skills" || "categories" || "applications") in req.body){
+			await ResourceController.updateResource(req, res)
 		}
-		console.log(UserModel)
 		UserModel.findByIdAndUpdate(id, req.body, {new: true, runValidators: true}, (err, data) => {
 			if (err) {
 				console.log('Here')
@@ -70,18 +67,6 @@ const UserController = {
 			} else {
 				const response = UserResponse.updateUserSuccess(data, userType);
 				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
-			}
-		});
-	},
-	
-	updateUserPortfolio: () => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {portfolio: newPortfolio}}, {new: true}, async (err, data) => {
-			if (err) {
-				const response = databaseError(err);
-				logger.error(response);
-			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
-				logger.info(response);
 			}
 		});
 	},
