@@ -17,7 +17,7 @@ const documentResourcesSchema = new Schema({
     required: true,
     type: String
   },
-  user: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ClientUsers',
     required: true

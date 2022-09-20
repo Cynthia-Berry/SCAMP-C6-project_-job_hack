@@ -1,30 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../../controllers/users/admin.user.controller');
+const documentController = require('../../controllers/resources/document.controller');
 const tokenValidators = require("../../middlewares/helpers/validators/token.validator");
 const validator = require("../../middlewares/services/validator.service");
 
 
+router.post('/',
+	validator("resourceValidators", "document"),
+	tokenValidators.validateAuth,
+	tokenValidators.adminOrCompanyValidators,
+	documentController.creatDocument
+);
 router.get('/',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.getAllAdmins
+	documentController.getAllDocuments
 );
 router.get('/:id',
 	tokenValidators.validateAuth,
-	tokenValidators.adminValidators,
-	adminController.getAdminById
+	documentController.getDocument
 );
 router.put('/:id',
-	validator("userValidators", "editAdmin"),
+	validator("resourceValidators", "document"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.updateAdmin
+	documentController.updateDocument
 );
 router.delete('/:id',
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	adminController.deleteAdmin
+	documentController.deleteDocument
 );
 
 module.exports = router;

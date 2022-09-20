@@ -18,6 +18,13 @@ const AuthResponse = {
 		};
 	},
 	
+	userSuccessfullyLoggedOut()  {
+		return {
+			status: successCodes.Success200.code, type: successCodes.Success200.type,
+			message: `Logout completed`
+		};
+	},
+	
 	invalidTokenError() {
 		return {
 			status: errorCodes.Error401.code, type: errorCodes.Error401.type,
