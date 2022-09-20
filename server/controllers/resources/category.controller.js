@@ -1,28 +1,28 @@
 const logger = require("../../middlewares/utils/logger");
+const ResourceController = require("./resource.controller");
 const ClientModel = require("../../models/users/client.user");
 const config = require("../../middlewares/helpers/enums/config.enum");
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
-const ResourceController = require("./resource.controller");
 
 const CategoryController = {
 	creatCategory: (req, res) => {
-		ResourceController.creatResource(req, res, config.CATEGORY)
+		ResourceController.creatResource(req, res, config.CATEGORY);
 	},
 	
 	getAllCategories: (req, res) => {
-		ResourceController.getAllResource(req, res, config.CATEGORY)
+		ResourceController.getAllResource(req, res, config.CATEGORY);
 	},
 	
 	getCategory: (req, res) => {
-		ResourceController.getResource(req, res, config.CATEGORY)
+		ResourceController.getResource(req, res, config.CATEGORY);
 	},
 	
 	updateCategory: (req, res) => {
-		ResourceController.updateResource(req, res, config.CATEGORY)
+		ResourceController.updateResource(req, res, config.CATEGORY);
 	},
 	
 	deleteCategory: (req, res) => {
-		ResourceController.deleteResource(req, res, config.CATEGORY)
+		ResourceController.deleteResource(req, res, config.CATEGORY);
 	},
 	
 	updateUserCategory: (id, newCategories) => {
