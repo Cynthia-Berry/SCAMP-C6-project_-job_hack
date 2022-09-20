@@ -13,11 +13,11 @@ const {databaseError} = require("../../middlewares/helpers/responses/database.re
 
 const CompanyController = {
 	getAllCompany(req, res) {
-		UserController.getAllUsers(req, res);
+		UserController.getAllUsers(req, res, config.COMPANY);
 	},
 	
 	getCompanyById: (req, res) => {
-		UserController.getUserById(req, res);
+		UserController.getUserById(req, res, config.COMPANY);
 	},
 	
 	createCompany: async (req, res) => {
@@ -35,7 +35,10 @@ const CompanyController = {
 		});
 		
 		companyObject.save().then(async () => {
-			jwt.sign({userId: companyObject.id, role: companyObject.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+			jwt.sign({
+				userId: companyObject.id,
+				role: companyObject.role
+			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});
@@ -45,23 +48,21 @@ const CompanyController = {
 					const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 					
 					AuthTokenModel.findByIdAndUpdate(companyObject.id, update, options, () => {
-						const response = UserResponse.createUserResponse();
+						const data = {
+							id: companyObject.id,
+							companyId: companyObject.companyId,
+							name: companyObject.name,
+							firstName: companyObject.firstName,
+							lastName: companyObject.lastName,
+							email: companyObject.email,
+							website: companyObject.website,
+							phoneNumber: companyObject.phoneNumber,
+							updatedAt: companyObject.updatedAt,
+							createdAt: companyObject.createdAt,
+						}
+						const response = UserResponse.createUserResponse(config.COMPANY, data);
 						logger.info(response.message);
-						res.status(response.status).json({
-							status: response.type, message: response.message,
-							data: {
-								id: companyObject.id,
-								companyId: companyObject.companyId,
-								name: companyObject.name,
-								firstName: companyObject.firstName,
-								lastName: companyObject.lastName,
-								email: companyObject.email,
-								website: companyObject.website,
-								phoneNumber: companyObject.phoneNumber,
-								updatedAt: companyObject.updatedAt,
-								createdAt: companyObject.createdAt,
-							}
-						});
+						res.status(response.status).json({status: response.type, message: response.message, data: response.data});
 					})
 				}
 			});
@@ -74,6 +75,7 @@ const CompanyController = {
 	
 	
 	updateCompany(req, res) {
+		UserController.updateUser(req, res, config.COMPANY)
 	},
 	
 	deleteCompany: (req, res) => {

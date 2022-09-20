@@ -2,7 +2,7 @@ require('dotenv').config();
 
 
 const express = require('express'), path = require('path');
-const createError = require('http-errors'), swaggerUi = require('swagger-ui-express');
+const createError = require('http-errors');
 
 global.appRoot = path.resolve(__dirname);
 global.appName = 'Job Hack';
@@ -18,6 +18,8 @@ const adminAuthRouter = require('./server/routes/auths/admin.auth.route');
 const clientAuthRouter = require('./server/routes/auths/client.auth.route');
 const companyAuthRouter = require('./server/routes/auths/company.auth.route');
 const adminProfileRouter = require('./server/routes/users/admin.user.route');
+const clientProfileRouter = require('./server/routes/users/client.user.route');
+const companyProfileRouter = require('./server/routes/company/company.route');
 
 
 // set headers (handling cors error)
@@ -40,6 +42,8 @@ app.use('/admin', adminAuthRouter);
 app.use('/client', clientAuthRouter);
 app.use('/company', companyAuthRouter);
 app.use('/admin-profile', adminProfileRouter);
+app.use('/client-profile', clientProfileRouter);
+app.use('/company-profile', companyProfileRouter);
 
 
 app.listen(port, () =>

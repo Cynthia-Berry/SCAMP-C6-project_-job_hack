@@ -38,6 +38,12 @@ const AuthResponse = {
 			message: 'You do not have permissions to process this action'
 		};
 	},
+	unauthorized() {
+		return {
+			status: errorCodes.Error401.code, type: tokenResponse.TOKEN_NOT_FOUND,
+			message: 'You do not have permissions to process this action'
+		};
+	},
 }
 
 module.exports = AuthResponse;

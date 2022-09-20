@@ -26,7 +26,7 @@ const UserController = {
 						res.status(response.status).json({status: response.type, message: response.message});
 					} else {
 						const pages = Math.ceil(totalCount / paginate.pageSize);
-						const response = UserResponse.getUserResponse(users);
+						const response = UserResponse.getUserResponse(userType, users);
 						res.status(response.status).json({
 							status: response.type, message: response.message, count: totalCount, pageNo: paginate.pageNo,
 							pages: pages, data: response.data
@@ -38,47 +38,39 @@ const UserController = {
 		
 	},
 	
-	getUserById: (req, res) => {
+	getUserById: (req, res, userType) => {
 		const id = req.params.id;
-		const userType = res.locals.tokenOwner.role;
 		UserModel = (userType === config.ADMIN) ? AdminModel : userType === config.COMPANY ? CompanyModel : ClientModel;
 		UserModel.findById(id, "-password -documents", async (err, data) => {
 			if (err) {
-				console.log('Here')
 				const response = UserResponse.getUserError(err, userType);
 				res.status(response.status).json({status: response.type, message: response.message});
 			} else {
-				const response = UserResponse.getUserResponse(data);
+				const response = UserResponse.getUserResponse(userType, data);
 				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
 			}
 		});
 	},
 	
-	updateUser: async (req, res) => {
+	updateUser: async (req, res, userType) => {
 		let newPortfolio = [];
-		const id = res.locals.tokenOwner.id;
-		const userType = res.locals.tokenOwner.role;
-		if ("password" in req.body || "recommended" in req.body || "role" in req.body || "userVerified" in req.body || "status" in req.body) {
-			const response = UserResponse.updateUserForbidden(userType);
-			res.status(response.status).json({status: response.type, message: response.message});
-		} else {
-			UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
-			if ("portfolio" in req.body) {
-				newPortfolio = newPortfolio.concat(req.body.portfolio);
-				delete req.body.portfolio;
-				await UserController.updateUserPortfolio(id, newPortfolio);
-			}
-			UserModel.findByIdAndUpdate(id, req.body, {new: true}, async (err, data) => {
-				if (err) {
-					const response = databaseError(err);
-					res.status(response.status).json({status: response.type, message: response.message});
-				} else {
-					data.password = undefined;
-					const response = UserResponse.updateUserSuccess(data, userType);
-					res.status(response.status).json({status: response.type, message: response.message, data: response.data});
-				}
-			});
+		const id = req.params.id;
+		UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
+		if ("portfolio" in req.body) {
+			newPortfolio = newPortfolio.concat(req.body.portfolio);
+			delete req.body.portfolio;
+			await UserController.updateUserPortfolio(id, newPortfolio);
 		}
+		console.log(UserModel)
+		UserModel.findByIdAndUpdate(id, req.body, {new: true, runValidators: true}, (err, data) => {
+			if (err) {
+				const response = databaseError(err);
+				res.status(response.status).json({status: response.type, message: response.message});
+			} else {
+				const response = UserResponse.updateUserSuccess(data, userType);
+				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+			}
+		});
 	},
 	
 	updateUserPortfolio: () => {
@@ -101,7 +93,7 @@ const UserController = {
 				const response = databaseError(err);
 				res.status(response.status).json({status: response.type, message: response.message});
 			} else {
-				const response = deleteUserSuccess(userType);
+				const response = UserResponse.deleteUserSuccess(userType);
 				res.status(response.status).json({status: response.type, message: response.message});
 			}
 		})
