@@ -39,6 +39,7 @@ const CompanyController = {
 				userId: companyObject.id,
 				role: companyObject.role
 			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
+
 				if (error) {
 					const response = AuthResponse.tokenExpired();
 					return res.status(response.status).json({status: response.type, message: response.message});

@@ -61,7 +61,8 @@ const UserController = {
 		}
 		UserModel.findByIdAndUpdate(id, req.body, {new: true, runValidators: true}, (err, data) => {
 			if (err) {
-				const response = databaseError(err);
+				console.log('Here')
+				const response = UserResponse.getUserError(err, userType);
 				res.status(response.status).json({status: response.type, message: response.message});
 			} else {
 				const response = UserResponse.updateUserSuccess(data, userType);

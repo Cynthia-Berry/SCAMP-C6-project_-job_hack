@@ -9,7 +9,6 @@ const config = require('../../middlewares/helpers/enums/config.enum');
 const AuthResponse = require('../../middlewares/helpers/responses/auth.response');
 const UserResponse = require('../../middlewares/helpers/responses/user.response');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
-const ClientModel = require("../../models/users/client.user");
 
 const ClientUserController = {
 	getAllClients(req, res) {

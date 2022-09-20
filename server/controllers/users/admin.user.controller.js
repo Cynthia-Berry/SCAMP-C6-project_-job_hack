@@ -17,7 +17,7 @@ const AdminUserController = {
 	},
 	
 	getAdminById: (req, res) => {
-		UserController.getUserById(req, res, config.ADMIN);
+		UserController.getUserById(req, res);
 	},
 	
 	createAdmin: async (req, res) => {
