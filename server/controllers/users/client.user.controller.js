@@ -74,18 +74,6 @@ const ClientUserController = {
 		UserController.deleteUser(req, res, config.CLIENT);
 	},
 	
-	updateUserPortfolio: (id, newPortfolio) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {portfolio: newPortfolio}}, {new: true}, async (err, data) => {
-			if (err) {
-				const response = databaseError(err);
-				logger.error(response);
-			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
-				logger.info(response);
-			}
-		});
-	},
-	
 }
 
 module.exports = ClientUserController;
