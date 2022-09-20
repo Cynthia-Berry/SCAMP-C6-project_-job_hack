@@ -21,7 +21,7 @@ const skills = Joi.object({
 
 const document = Joi.object({
 	name: Joi.string().required(),
-	documentType: Joi.string().required(),
+	documentType: Joi.string().required().valid( 'CV', 'PORTFOLIO', 'COVER_LETTER', 'CERTIFICATION', 'OTHERS'),
 	url: Joi.string().required(),
 	userId: Joi.string().required(),
 });
