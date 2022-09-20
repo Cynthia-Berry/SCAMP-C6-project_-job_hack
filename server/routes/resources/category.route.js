@@ -24,7 +24,7 @@ router.put('/:id',
 	validator("resourceValidators", "category"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
-	categoryController.updateClient
+	categoryController.updateCategory
 );
 router.delete('/:id',
 	tokenValidators.validateAuth,
