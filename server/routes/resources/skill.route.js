@@ -6,7 +6,7 @@ const validator = require("../../middlewares/services/validator.service");
 
 
 router.post('/',
-	validator("resourceValidators", "category"),
+	validator("resourceValidators", "skills"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminOrCompanyValidators,
 	skillsController.creatSkills
@@ -21,7 +21,7 @@ router.get('/:id',
 	skillsController.getSkills
 );
 router.put('/:id',
-	validator("resourceValidators", "category"),
+	validator("resourceValidators", "skills"),
 	tokenValidators.validateAuth,
 	tokenValidators.adminValidators,
 	skillsController.updateSkills

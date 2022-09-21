@@ -53,7 +53,7 @@ app.use('/company-profile', companyProfileRouter);
 app.use('/category', categoryRouter);
 app.use('/education', educationRouter);
 app.use('/document', documentRouter);
-app.use('/skill', skillRouter);
+app.use('/skills', skillRouter);
 
 
 app.listen(port, () =>

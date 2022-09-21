@@ -25,16 +25,6 @@ const SkillsController = {
 	deleteSkills: (req, res) => {
 		ResourceController.deleteResource(req, res, config.SKILL)
 	},
-	updateUserSkills: (id, newSkills) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {skills: newSkills}}, {new: true}, async (err, data) => {
-			if (err) {
-				const response = databaseError(err);
-				logger.error(response);
-			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
-				logger.info(response);
-			}
-		});
-	},
+	
 }
 module.exports = SkillsController;
