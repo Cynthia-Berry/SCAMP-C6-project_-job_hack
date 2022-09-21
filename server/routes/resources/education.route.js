@@ -8,7 +8,7 @@ const validator = require("../../middlewares/services/validator.service");
 router.post('/',
 	validator("resourceValidators", "education"),
 	tokenValidators.validateAuth,
-	tokenValidators.adminOrCompanyValidators,
+	tokenValidators.adminOrClientValidators,
 	educationController.creatEducation
 );
 router.get('/',

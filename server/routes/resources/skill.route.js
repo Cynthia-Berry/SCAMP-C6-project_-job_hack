@@ -8,7 +8,6 @@ const validator = require("../../middlewares/services/validator.service");
 router.post('/',
 	validator("resourceValidators", "skills"),
 	tokenValidators.validateAuth,
-	tokenValidators.adminOrCompanyValidators,
 	skillsController.creatSkills
 );
 router.get('/',

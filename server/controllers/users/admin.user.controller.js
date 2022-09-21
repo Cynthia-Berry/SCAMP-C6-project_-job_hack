@@ -36,7 +36,8 @@ const AdminUserController = {
 		userObject.save().then(async () => {
 			jwt.sign({
 				userId: userObject.id,
-				role: userObject.role
+				role: userObject.role,
+				adminId: userObject.adminId
 			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 				if (error) {
 					const response = AuthResponse.tokenExpired();

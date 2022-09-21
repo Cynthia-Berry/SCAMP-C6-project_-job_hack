@@ -27,7 +27,7 @@ const AdminAuthController = {
 					} else {
 						jwt.verify(response.token, process.env.TOKEN_KEY, {userId: dataExists.id}, async (err, data) => {
 							if (err || typeof err === 'undefined') {
-								jwt.sign({userId: dataExists.id, role: dataExists.role}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, token) => {
+								jwt.sign({userId: dataExists.id, role: dataExists.role, adminId: dataExists.adminId}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, token) => {
 									const hours = moment().add(6, "hours");
 									const update = {$set: {token: token, expireDate: hours, userId: dataExists.id}};
 									const options = {upsert: true, new: true, setDefaultsOnInsert: true};

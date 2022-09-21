@@ -8,7 +8,6 @@ const validator = require("../../middlewares/services/validator.service");
 router.post('/',
 	validator("resourceValidators", "category"),
 	tokenValidators.validateAuth,
-	tokenValidators.adminOrCompanyValidators,
 	categoryController.creatCategory
 );
 router.get('/',

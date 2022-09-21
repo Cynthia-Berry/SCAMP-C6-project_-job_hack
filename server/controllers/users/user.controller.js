@@ -7,7 +7,7 @@ const UserResponse = require('../../middlewares/helpers/responses/user.response'
 const PaginationService = require('../../middlewares/services/pagination.service');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
 const logger = require("../../middlewares/utils/logger");
-
+const UploadService = require('../../middlewares/services/upload.service')
 
 let UserModel;
 
@@ -51,9 +51,26 @@ const UserController = {
 				logger.error(response.message)
 				res.status(response.status).json({status: response.type, message: response.message});
 			} else {
-				const response = UserResponse.getUserResponse(userType, data);
-				logger.info(response.message)
-				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+				if (userType === config.COMPANY) {
+					data.populate('company', async () => {
+						data.company.profileImage = await UploadService.fetchFileSignedUrl(data.company.profileImage);
+						const response = UserResponse.getUserResponse(userType, data);
+						res.status(response.status).json({status: response.type, message: response.message, data: data});
+					});
+				} else if (userType === config.CLIENT) {
+					const populate = 'educations documents skills categories portfolio'
+					data.populate('skills', async () => {
+						data.profileImage = await UploadService.fetchFileSignedUrl(data.profileImage);
+						console.log(data.documents)
+						for (const forEach of data.documents) forEach.url = await fetchFileSignedUrl(forEach.url);
+						const response = UserResponse.getUserResponse(userType, data);
+						res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+					});
+				} else {
+					data.profileImage = await UploadService.fetchFileSignedUrl(data.profileImage);
+					const response = UserResponse.getUserResponse(userType, data);
+					res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+				}
 			}
 		});
 	},
@@ -61,20 +78,14 @@ const UserController = {
 	updateUser: async (req, res, userType) => {
 		const id = req.params.id;
 		UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
-		if (userType === config.CLIENT && ("portfolio" || "documents" || "skills" || "categories" || "educations" || "applications") in req.body) {
+		if (userType === config.CLIENT && ("portfolio" || "skills" || "categories" || "educations" || "applications") in req.body) {
 			const id = req.params.id;
-			let newPortfolio = [], newDocuments = [], newSkills = [],
-				newEducations = [], newCategories = [], newApplications = [];
+			let newPortfolio = [], newSkills = [], newEducations = [], newCategories = [], newApplications = [];
 			
 			if ("portfolio" in req.body) {
 				newPortfolio = newPortfolio.concat(req.body.portfolio);
 				delete req.body.portfolio;
 				await UserController.updateUserPortfolio(id, newPortfolio);
-			}
-			if ("documents" in req.body) {
-				newDocuments = newDocuments.concat(req.body.documents);
-				delete req.body.documents;
-				await UserController.updateUserDocuments(id, newDocuments);
 			}
 			if ("skills" in req.body) {
 				newSkills = newSkills.concat(req.body.skills);

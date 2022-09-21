@@ -39,4 +39,10 @@ const editCompany = Joi.object({
 	verified: Joi.boolean(),
 	status: Joi.boolean(),
 });
-module.exports = {editAdmin, editClient, editCompany}
+
+const profilePhoto = Joi.object({
+  base64File: Joi.string().base64().required(),
+  fileName: Joi.string().required(),
+});
+
+module.exports = {editAdmin, editClient, editCompany, profilePhoto}

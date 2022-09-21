@@ -23,8 +23,8 @@ const clientProfileRouter = require('./server/routes/users/client.user.route');
 const companyProfileRouter = require('./server/routes/company/company.route');
 const categoryRouter = require('./server/routes/resources/category.route');
 const educationRouter = require('./server/routes/resources/education.route');
-const documentRouter = require('./server/routes/resources/document.route');
 const skillRouter = require('./server/routes/resources/skill.route');
+const fileRouter = require('./server/routes/files/file.route');
 
 
 // set headers (handling cors error)
@@ -52,8 +52,8 @@ app.use('/client-profile', clientProfileRouter);
 app.use('/company-profile', companyProfileRouter);
 app.use('/category', categoryRouter);
 app.use('/education', educationRouter);
-app.use('/document', documentRouter);
 app.use('/skills', skillRouter);
+app.use('/file', fileRouter);
 
 
 app.listen(port, () =>
