@@ -20,10 +20,9 @@ const skills = Joi.object({
 });
 
 const document = Joi.object({
-	name: Joi.string().required(),
-	documentType: Joi.string().required().valid( 'CV', 'PORTFOLIO', 'COVER_LETTER', 'CERTIFICATION', 'OTHERS'),
-	url: Joi.string().required(),
-	userId: Joi.string().required(),
+	base64File: Joi.string().base64().required(),
+	fileName: Joi.string().required(),
+	documentType: Joi.string().required().valid('CV', 'PORTFOLIO', 'COVER_LETTER', 'CERTIFICATION', 'OTHERS'),
 });
 
 module.exports = {category, education, skills, document}

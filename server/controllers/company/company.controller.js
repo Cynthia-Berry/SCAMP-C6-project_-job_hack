@@ -37,7 +37,8 @@ const CompanyController = {
 		companyObject.save().then(async () => {
 			jwt.sign({
 				userId: companyObject.id,
-				role: companyObject.role
+				role: companyObject.role,
+				companyId: companyObject.companyId
 			}, process.env.TOKEN_KEY, {expiresIn: config.JWT_EXPIRE_PERIOD}, async (error, result) => {
 
 				if (error) {
