@@ -25,6 +25,9 @@ const categoryRouter = require('./server/routes/resources/category.route');
 const educationRouter = require('./server/routes/resources/education.route');
 const skillRouter = require('./server/routes/resources/skill.route');
 const fileRouter = require('./server/routes/files/file.route');
+const countRouter = require('./server/routes/vacancy/count.route');
+const vacancyRouter = require('./server/routes/vacancy/vacancy.route');
+const applicationRouter = require('./server/routes/vacancy/application.route');
 
 
 // set headers (handling cors error)
@@ -54,6 +57,9 @@ app.use('/category', categoryRouter);
 app.use('/education', educationRouter);
 app.use('/skills', skillRouter);
 app.use('/file', fileRouter);
+app.use('/vacancy', vacancyRouter);
+app.use('/count', countRouter);
+app.use('/application', applicationRouter);
 
 
 app.listen(port, () =>

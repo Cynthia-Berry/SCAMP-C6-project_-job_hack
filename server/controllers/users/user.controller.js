@@ -7,7 +7,8 @@ const UserResponse = require('../../middlewares/helpers/responses/user.response'
 const PaginationService = require('../../middlewares/services/pagination.service');
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
 const logger = require("../../middlewares/utils/logger");
-const UploadService = require('../../middlewares/services/upload.service')
+const UploadService = require('../../middlewares/services/upload.service');
+
 
 let UserModel;
 
@@ -58,11 +59,9 @@ const UserController = {
 						res.status(response.status).json({status: response.type, message: response.message, data: data});
 					});
 				} else if (userType === config.CLIENT) {
-					const populate = 'educations documents skills categories portfolio'
 					data.populate('skills', async () => {
 						data.profileImage = await UploadService.fetchFileSignedUrl(data.profileImage);
-						console.log(data.documents)
-						for (const forEach of data.documents) forEach.url = await fetchFileSignedUrl(forEach.url);
+						for (const forEach of data.documents) forEach.url = await UploadService.fetchFileSignedUrl(forEach.url);
 						const response = UserResponse.getUserResponse(userType, data);
 						res.status(response.status).json({status: response.type, message: response.message, data: response.data});
 					});
@@ -78,10 +77,10 @@ const UserController = {
 	updateUser: async (req, res, userType) => {
 		const id = req.params.id;
 		UserModel = (userType === config.ADMIN) ? AdminModel : (userType === config.COMPANY) ? CompanyModel : ClientModel;
-		if (userType === config.CLIENT && ("portfolio" || "skills" || "categories" || "educations" || "applications") in req.body) {
+		if (userType === config.CLIENT) {
 			const id = req.params.id;
-			let newPortfolio = [], newSkills = [], newEducations = [], newCategories = [], newApplications = [];
-			
+			let newPortfolio = [], newSkills = [], newEducations = [],
+				newDocument = [], newCategories = [], newApplications = [];
 			if ("portfolio" in req.body) {
 				newPortfolio = newPortfolio.concat(req.body.portfolio);
 				delete req.body.portfolio;
@@ -91,6 +90,11 @@ const UserController = {
 				newSkills = newSkills.concat(req.body.skills);
 				delete req.body.skills;
 				await UserController.updateUserSkills(id, newSkills);
+			}
+			if ("documents" in req.body) {
+				newDocument = newDocument.concat(req.body.documents);
+				delete req.body.documents;
+				await UserController.updateUserDocuments(id, newDocument);
 			}
 			if ("educations" in req.body) {
 				newEducations = newEducations.concat(req.body.educations);
@@ -146,72 +150,72 @@ const UserController = {
 	},
 	
 	updateUserPortfolio: (id, newPortfolio) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {skills: newPortfolio}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {skills: newPortfolio}}, {new: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});
 	},
 	
 	updateUserDocuments: (id, newDocuments) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {documents: newDocuments}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {documents: newDocuments}}, {new: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});
 	},
 	
 	updateUserSkills: (id, newSkills) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {skills: newSkills}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {skills: newSkills}}, {new: false, rawResult: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});
 	},
 	
 	updateUserEducation: (id, newEducation) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {educations: newEducation}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {educations: newEducation}}, {new: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});
 	},
 	
 	updateUserCategory: (id, newCategories) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {categories: newCategories}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {categories: newCategories}}, {new: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});
 	},
 	
 	updateUserApplication: (id, newApplications) => {
-		ClientModel.findOneAndUpdate({_id: id}, {$push: {applications: newApplications}}, {new: true}, async (err, data) => {
+		ClientModel.findOneAndUpdate({_id: id}, {$set: {applications: newApplications}}, {new: true}, async (err, data) => {
 			if (err) {
 				const response = databaseError(err);
 				logger.error(response);
 			} else {
-				const response = updateUserSuccess(data, config.CLIENT);
+				const response = UserResponse.updateUserSuccess(data, config.CLIENT);
 				logger.info(response);
 			}
 		});

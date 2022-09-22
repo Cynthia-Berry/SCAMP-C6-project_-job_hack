@@ -43,7 +43,7 @@ const FilesController = {
 		}
 	},
 	
-	uploadProfileDocuments: async (req, res) => {
+	uploadDocuments: async (req, res) => {
 		const name = FilesController.getExpectedFileName(res);
 		const file = req.body;
 		const fileRes = await UploadService.uploadBase64String(file, name, config.FILE_DOCUMENT);
@@ -73,7 +73,7 @@ const FilesController = {
 		}
 	},
  
-	getProfileDocuments: (req, res) => {
+	getDocuments: (req, res) => {
 		req.query.user = res.locals.tokenOwner.id;
 		const paginate = PaginationService.validatePageNo(req, res);
 		const filterQuery = PaginationService.filterPaginateQuery(req);
@@ -100,7 +100,7 @@ const FilesController = {
 		});
 	},
 	
-	deleteProfileDocuments: async (req, res) => {
+	deleteDocuments: async (req, res) => {
 		const doc_id = req.params.id;
 		const clientId = res.locals.tokenOwner.id;
 		DocumentModel.findByIdAndDelete(doc_id, {}, err => {

@@ -2,32 +2,33 @@ const successCodes = require("../enums/successCodes.enum");
 const errorCodes = require("../enums/errorCodes.enum");
 
 
-const ResourceResponse = {
-	createResource(type, data) {
+const VacancyResponse = {
+	createVacancy(type, data) {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
 			message: `${type} created Successfully`, data: data
 		};
 	},
-	getResourceResponse(type, data) {
+	getVacancyResponse(type, data) {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
-			message: `${type} fetched Successfully`, data: data
+			message: `${type} profile fetched Successfully`, data: data
 		};
 	},
-	getResourceError: (type, error) => {
+	
+	getVacancyError: (type, error) => {
 		return {
 			status: errorCodes.Error400.code, type: errorCodes.Error400.type,
 			message: `Error occurred, could not fetch ${type.toLowerCase()} resources (${error})`
 		};
 	},
-	updateResource: (type, data) => {
+	updateVacancy: (type, data) => {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
 			message: `${type} updated Successfully`, data: data
 		};
 	},
-	deleteResource(type) {
+	deleteVacancy(type) {
 		return {
 			status: successCodes.Success200.code, type: successCodes.Success200.type,
 			message: `${type} deleted Successfully`
@@ -35,4 +36,4 @@ const ResourceResponse = {
 	},
 }
 
-module.exports = ResourceResponse;
+module.exports = VacancyResponse;

@@ -21,6 +21,13 @@ const TokenValidator = {
 		} else next();
 	},
 	
+	companyValidators: (req, res, next) => {
+		if (res.locals.tokenOwner['role'] !== config.COMPANY) {
+			const response = TokenResponse.tokenNotFound();
+			res.status(response.status).json({status: response.type, message: response.message});
+		} else next();
+	},
+	
 	adminOrClientValidators: (req, res, next) => {
 		if (res.locals.tokenOwner['role'] === config.COMPANY) {
 			const response = TokenResponse.tokenNotFound();

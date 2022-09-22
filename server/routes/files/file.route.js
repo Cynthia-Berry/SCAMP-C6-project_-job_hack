@@ -14,18 +14,18 @@ router.post('/upload-profile-documents',
 	validator("resourceValidators", "document"),
 	tokenValidators.validateAuth,
 	tokenValidators.clientValidators,
-	filesController.uploadProfileDocuments
+	filesController.uploadDocuments
 );
 
 router.get('/fetch-profile-documents',
 	tokenValidators.validateAuth,
-	filesController.getProfileDocuments
+	filesController.getDocuments
 );
 
 router.delete('/delete-profile-documents/:id',
 	tokenValidators.validateAuth,
 	tokenValidators.clientValidators,
-	filesController.deleteProfileDocuments
+	filesController.deleteDocuments
 );
 
 module.exports = router;

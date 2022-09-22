@@ -3,6 +3,7 @@ const errorCodes = require("../helpers/enums/errorcodes.enum");
 const authValidators = require('../helpers/validators/auth.validator');
 const userValidators = require('../helpers/validators/user.validator');
 const resourceValidators = require('../helpers/validators/resource.validator');
+const vacancyValidators = require('../helpers/validators/vacancy.validator');
 
 
 module.exports = (validatorType, method) => {
@@ -31,4 +32,5 @@ const getValidator = (validatorType, method) => {
   if (validatorType === "authValidators") return authValidators[method];
   if (validatorType === "userValidators") return userValidators[method];
   if (validatorType === "resourceValidators") return resourceValidators[method];
+  if (validatorType === "vacancyValidators") return vacancyValidators[method];
 }
