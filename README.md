@@ -35,11 +35,18 @@ NB: The asteriks values are to be supplied by you in relation to your MongoDB At
 
 to set your JWT header before making a request on postman or any other API testing platform.
    (This is exclusive of the registration and login endpoints).
+4. This application is hosted on 
+   1. [RENDER](https://job-hack.onrender.com) 
+   2. [HEROKU](https://job-hack.herokuapp.com)
+   any of the above can be used as the applications BASEURL instead of running the application locally
 
    
 ## Documentation
 See the below documentation made with postman for the 4 collections
 1. [Authentication](https://documenter.getpostman.com/view/13595180/2s7Z12EiL8)
 2. [User](https://documenter.getpostman.com/view/13595180/2s7Z12EiLD)
+3. [Vacancy](https://documenter.getpostman.com/view/13595180/2s7ZE7KPX6)
+4. [Resources](https://documenter.getpostman.com/view/13595180/2s7ZE7KiPb)
+5. [Files](https://documenter.getpostman.com/view/13595180/2s7ZE7KiU6)
 
 
