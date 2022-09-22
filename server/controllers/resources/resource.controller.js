@@ -7,6 +7,7 @@ const EducationModel = require("../../models/resources/education.resources");
 const PaginationService = require("../../middlewares/services/pagination.service");
 const ResourceResponse = require("../../middlewares/helpers/responses/resource.response");
 const {databaseError} = require("../../middlewares/helpers/responses/database.response");
+const UserResponse = require("../../middlewares/helpers/responses/user.response");
 
 
 let ResourcesModel;
@@ -78,6 +79,17 @@ const ResourceController = {
 	updateResource: (req, res, resourceType) => {
 		ResourcesModel = resourceType === config.CATEGORY ? CategoryModel : resourceType === config.EDUCATION ? EducationModel :
 			resourceType === config.SKILL ? SkillModel : resourceType === config.FILE_DOCUMENT ? DocumentModel : null;
+		ResourcesModel.findByIdAndUpdate(id, req.body, {new: true, runValidators: true}, (err, data) => {
+			if (err) {
+				const response = ResourceResponse.getResourceError(userType, err);
+				logger.error(response.message)
+				res.status(response.status).json({status: response.type, message: response.message});
+			} else {
+				const response = ResourceResponse.updateResource(resourceType, data);
+				logger.info(response.message)
+				res.status(response.status).json({status: response.type, message: response.message, data: response.data});
+			}
+		});
 	},
 	
 	deleteResource: (req, res, resourceType) => {
