@@ -30,6 +30,14 @@ const vacancyRouter = require('./server/routes/vacancy/vacancy.route');
 const applicationRouter = require('./server/routes/vacancy/application.route');
 
 
+//
+app.set('views', path.join(__dirname, 'server/views'));
+app.set('view engine', 'ejs');
+
+// set the req body (parses the body that comes with post/put requests )
+app.use(express.static(path.join(__dirname, 'server/views')));
+app.use(express.json({limit: '50mb', extended: true}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
 // set headers (handling cors error)
 app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -39,11 +47,6 @@ app.use((req, res, next) => {
 	res.header("Access-Control-Allow-Credentials", 'true');
 	next();
 });
-
-// set the req body (parses the body that comes with post/put requests )
-app.use(express.json({limit: '50mb', extended: true}));
-app.use(express.static(path.join(__dirname, 'server/public')));
-app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
